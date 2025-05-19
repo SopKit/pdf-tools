@@ -16,9 +16,44 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "PDF Tools - Premium PDF Solutions",
-  description: "Professional-grade PDF tools for viewing, annotating, merging, splitting, and more. Powered by JavaScript.",
-  keywords: "PDF tools, PDF editor, PDF viewer, PDF merger, PDF splitter, online PDF tools",
+  title: "PDF Tools - Premium Free PDF Solutions Online",
+  description: "Professional-grade free PDF tools for viewing, editing, annotating, merging, splitting and converting PDFs. No installation needed, works directly in your browser.",
+  keywords: "PDF tools, PDF editor, PDF viewer, PDF merger, PDF splitter, PDF converter, online PDF tools, free PDF editor, PDF annotation, JavaScript PDF tools",
+  openGraph: {
+    title: "PDF Tools - Premium Free PDF Solutions Online",
+    description: "Professional-grade free PDF tools powered by JavaScript. Edit, annotate, merge, split, and convert PDFs online without installation.",
+    url: "https://sopkit.github.io/pdf-tools/",
+    siteName: "SopKit PDF Tools",
+    images: [
+      {
+        url: "https://sopkit.github.io/pdf-tools/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "SopKit PDF Tools",
+      }
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PDF Tools - Premium Free PDF Solutions Online",
+    description: "Professional-grade free PDF tools powered by JavaScript. Edit, annotate, merge, split, and convert PDFs online.",
+    images: ["https://sopkit.github.io/pdf-tools/twitter-image.jpg"],
+  },
+  alternates: {
+    canonical: "https://sopkit.github.io/pdf-tools/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({ children }) {
