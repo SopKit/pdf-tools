@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Set the pdf.js worker source
@@ -71,14 +71,14 @@ export default function DragDropReader() {
       dropArea.removeEventListener('dragleave', handleDragLeave);
       dropArea.removeEventListener('drop', handleDrop);
     };
-  }, []);
+  }, [handleFile]);
   
   // Effect to render page when page number or pdf document changes
   useEffect(() => {
     if (pdfDoc) {
       renderPage();
     }
-  }, [pageNum, scale, pdfDoc]);
+  }, [pageNum, scale, pdfDoc, renderPage]);
   
   // Handle file input change
   const handleFileInputChange = (e) => {
@@ -142,7 +142,7 @@ export default function DragDropReader() {
   };
 
   // Render the current page
-  const renderPage = async () => {
+  const renderPage = useCallback(async () => {
     if (!pdfDoc) return;
     
     try {
@@ -169,7 +169,7 @@ export default function DragDropReader() {
       console.error("Error rendering page:", error);
       setError("Failed to render page: " + error.message);
     }
-  };
+  }, [pdfDoc, pageNum, scale, canvasRef]);
 
   // Navigation functions
   const goToPrevPage = () => {

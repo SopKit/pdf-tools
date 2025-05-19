@@ -143,9 +143,12 @@ export default function PDFMerger() {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-white">
+      <h1 className="text-2xl font-bold mb-2 text-center text-gray-800 dark:text-white">
         PDF Merger Tool
       </h1>
+      <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
+        Combine multiple PDF files into a single document quickly and easily
+      </p>
       
       <div className="mb-6">
         <div className="flex items-center mb-2">
