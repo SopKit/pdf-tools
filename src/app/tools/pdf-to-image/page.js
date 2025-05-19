@@ -30,7 +30,7 @@ export default function PDFToImage() {
       // Auto-select first page when loading a document
       setSelectedPages([1]);
     }
-  }, [selectAll, pages]);
+  }, [selectAll, pages, selectedPages.length]);
 
   // Handle file selection
   const handleFileChange = async (e) => {

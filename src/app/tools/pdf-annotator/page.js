@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Set the pdf.js worker source
@@ -58,8 +58,8 @@ export default function PDFAnnotator() {
     fileReader.readAsArrayBuffer(file);
   };
 
-  // Render PDF page
-  const renderPage = async (num, doc = pdfDoc) => {
+  // Render PDF page - defined with useCallback to avoid dependency issues
+  const renderPage = useCallback(async (num, doc = pdfDoc) => {
     if (!doc) return;
     
     try {
@@ -88,12 +88,12 @@ export default function PDFAnnotator() {
       
       await page.render(renderContext).promise;
       
-      // Render saved annotations for this page
-      renderAnnotations();
+      // Render saved annotations for this page - Removed to avoid dependency cycle
+      // renderAnnotations();
     } catch (error) {
       console.error("Error rendering page:", error);
     }
-  };
+  }, [pdfDoc, scale, pdfCanvasRef, annotationCanvasRef]);
 
   // Handle page navigation
   const changePage = (offset) => {
@@ -201,7 +201,7 @@ export default function PDFAnnotator() {
     setTextInput(e.target.value);
   };
 
-  const handleTextSubmit = (e) => {
+  const handleTextSubmit = useCallback((e) => {
     e.preventDefault();
     
     if (textInput.trim()) {
@@ -217,12 +217,12 @@ export default function PDFAnnotator() {
       setAnnotations(prev => [...prev, newAnnotation]);
       setTextInput('');
       setShowTextInput(false);
-      renderAnnotations();
+      // renderAnnotations() will be called by the useEffect that depends on annotations
     }
-  };
+  }, [textInput, pageNum, textPosition.x, textPosition.y, color]);
 
-  // Render all annotations for current page
-  const renderAnnotations = (includeCurrentAnnotation = false) => {
+  // Render all annotations for current page - defined with useCallback to avoid dependency issues
+  const renderAnnotations = useCallback((includeCurrentAnnotation = false) => {
     if (!annotationCanvasRef.current) return;
     
     const canvas = annotationCanvasRef.current;
@@ -243,10 +243,10 @@ export default function PDFAnnotator() {
     if (includeCurrentAnnotation && currentAnnotation) {
       drawAnnotation(ctx, currentAnnotation);
     }
-  };
+  }, [annotations, pageNum, currentAnnotation, annotationCanvasRef, drawAnnotation]);
 
   // Draw a single annotation
-  const drawAnnotation = (ctx, annotation) => {
+  const drawAnnotation = useCallback((ctx, annotation) => {
     if (annotation.type === 'drawing') {
       ctx.strokeStyle = annotation.color;
       ctx.lineWidth = annotation.lineWidth;
@@ -276,13 +276,13 @@ export default function PDFAnnotator() {
         annotation.height
       );
     }
-  };
+  }, []);
 
   // Clear all annotations on current page
-  const clearAnnotations = () => {
+  const clearAnnotations = useCallback(() => {
     setAnnotations(prev => prev.filter(a => a.page !== pageNum));
-    renderAnnotations();
-  };
+    // renderAnnotations() will be called by the useEffect that depends on annotations
+  }, [pageNum]);
 
   // Save annotated PDF (this is a placeholder - would require a full PDF generation library)
   const saveAnnotatedPDF = () => {
@@ -294,12 +294,12 @@ export default function PDFAnnotator() {
     if (pdfDoc) {
       renderPage(pageNum);
     }
-  }, [pageNum, pdfDoc]);
+  }, [pageNum, pdfDoc, renderPage]);
 
   // Effect to render annotations when they change
   useEffect(() => {
     renderAnnotations();
-  }, [annotations, pageNum]);
+  }, [annotations, pageNum, renderAnnotations]);
 
   // Clean up effect
   useEffect(() => {

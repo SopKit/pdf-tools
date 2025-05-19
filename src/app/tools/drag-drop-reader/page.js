@@ -91,7 +91,7 @@ export default function DragDropReader() {
   };
   
   // Process the selected/dropped file
-  const handleFile = (file) => {
+  const handleFile = useCallback((file) => {
     if (file.type !== 'application/pdf') {
       setError('Please select a valid PDF file.');
       return;
@@ -139,7 +139,7 @@ export default function DragDropReader() {
     };
     
     fileReader.readAsArrayBuffer(file);
-  };
+  }, [formatFileSize]);
 
   // Render the current page
   const renderPage = useCallback(async () => {
@@ -190,7 +190,7 @@ export default function DragDropReader() {
   };
 
   // Format file size to human readable format
-  const formatFileSize = (bytes) => {
+  const formatFileSize = useCallback((bytes) => {
     if (bytes === 0) return '0 Bytes';
     
     const k = 1024;
@@ -198,7 +198,7 @@ export default function DragDropReader() {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
+  }, []);
 
   return (
     <div className="max-w-6xl mx-auto p-4">
